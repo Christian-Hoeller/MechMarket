@@ -22,21 +22,22 @@ namespace KeyboardMarket.Pages
         {
             await HttpContext.ChallengeAsync();
 
-        //    DBContext dBContext = new DBContext();
-        //    DataTable dt = new DataTable();
-             
-        //    using(SqlCommand cmd = new SqlCommand("SELECT * FROM [dbo].[Lands]"))
-        //    {
-        //        dt = dBContext.GetDataReader(cmd);
-        //    }
+            //    DBContext dBContext = new DBContext();
+            //    DataTable dt = new DataTable();
 
-        //    List<string> Lands = new List<string>();
+            //    using(SqlCommand cmd = new SqlCommand("SELECT * FROM [dbo].[Lands]"))
+            //    {
+            //        dt = dBContext.GetDataReader(cmd);
+            //    }
+
+            //    List<string> Lands = new List<string>();
 
 
-        //    foreach(DataRow row in dt.Rows)
-        //    {
-        //        Lands.Add(row["Land"].ToString());
-        //    }
-        //}
+            //    foreach(DataRow row in dt.Rows)
+            //    {
+            //        Lands.Add(row["Land"].ToString());
+            //    }
+            //}
+        }
     }
 }
