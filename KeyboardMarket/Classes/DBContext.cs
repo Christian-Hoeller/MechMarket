@@ -12,7 +12,13 @@ namespace KeyboardMarket.Classes
 
         public DBContext()
         {
-            this.ConnectionString = string.Empty;
+            string password = "__";
+            this.ConnectionString = "Server=tcp:mysqlserver-keyboardmarket.database.windows.net,1433;" +
+                "Initial Catalog=keyboardmarket-database;Persist Security Info=False;" +
+                "User ID=ch.hoeller14@gmail.com@mysqlserver-keyboardmarket;" +
+                $"Password={password};" +
+                "MultipleActiveResultSets=False;Encrypt=True;" +
+                "TrustServerCertificate=False;Connection Timeout=30;";
         }
 
         private SqlConnection GetConnection()
