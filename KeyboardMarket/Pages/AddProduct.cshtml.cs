@@ -22,6 +22,13 @@ namespace KeyboardMarket.Pages
             Lands = GetLands();
         }
 
+        public async Task OnPostAddProduct()
+        {
+            var title = Request.Form["title"];
+            var land = Request.Form["land"];
+            var price = Request.Form["price"];
+            var currency = Request.Form["currency"];
+        }
 
 
         private List<Currency> GetCurrencies()

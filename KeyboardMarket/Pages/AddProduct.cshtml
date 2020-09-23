@@ -5,28 +5,28 @@
 
 
 
-    <form method="post">
+    <form method="post" asp-page-handler="AddProduct">
 
         <!--Title-->
-        <input type="text"/>
+        <input type="text" name="title"/>
         <!--Price-->
-        <input type="text"/>
+        <input type="text" name="price"/>
         <!--Currency-->
-        <select>
+        <select name="land">
             @foreach (var land in Model.Lands)
             {
                 <option value="@land.ID">@land.Value</option>
             }
         </select>
         <!--Land-->
-        <select>
+        <select name="currency">
             @foreach(var currency in Model.Currencies)
             {
                 <option value="@currency.ID">@currency.Value</option>
             }
         </select>
 
-
+        <input type="submit" value="Add product"/>
     </form>
 
 
