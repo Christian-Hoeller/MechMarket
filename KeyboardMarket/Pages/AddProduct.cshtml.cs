@@ -14,20 +14,22 @@ namespace KeyboardMarket.Pages
     public class AddProductModel : PageModel
     {
         public List<Currency> Currencies { get; set; }
+        public List<Land> Lands { get; set; }
 
         public void OnGet()
         {
             Currencies = GetCurrencies();
+            Lands = GetLands();
         }
 
 
 
-        public List<Currency> GetCurrencies()
+        private List<Currency> GetCurrencies()
         {
             DBContext dBContext = new DBContext();
             DataTable dt = new DataTable();
 
-            using (SqlCommand cmd = new SqlCommand("SELECT * FROM [dbo].[Currencies]"))
+            using (SqlCommand cmd = new SqlCommand("SELECT * FROM Currencies"))
             {
                 dt = dBContext.GetDataReader(cmd);
             }
@@ -41,6 +43,27 @@ namespace KeyboardMarket.Pages
                 Currencies.Add(new Currency(id, currency));
             }
             return Currencies;
+        }
+
+        private List<Land> GetLands()
+        {
+            DBContext dBContext = new DBContext();
+            DataTable dt = new DataTable();
+
+            using (SqlCommand cmd = new SqlCommand("SELECT * FROM Lands"))
+            {
+                dt = dBContext.GetDataReader(cmd);
+            }
+
+            List<Land> Land = new List<Land>();
+
+            foreach (DataRow row in dt.Rows)
+            {
+                int id = Convert.ToInt32(row["LandID"]);
+                string land = row["Land"].ToString();
+                Land.Add(new Land(id, land));
+            }
+            return Land;
         }
     }
 }

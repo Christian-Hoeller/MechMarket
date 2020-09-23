@@ -13,6 +13,10 @@
         <input type="text"/>
         <!--Currency-->
         <select>
+            @foreach (var land in Model.Lands)
+            {
+                <option value="@land.ID">@land.Value</option>
+            }
         </select>
         <!--Land-->
         <select>
