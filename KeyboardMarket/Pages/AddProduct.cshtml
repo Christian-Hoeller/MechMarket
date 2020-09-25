@@ -1,32 +1,41 @@
 ﻿@page "/Add-Product"
 @model KeyboardMarket.Pages.AddProductModel
-@{
+@section scripts{
+    <partial name="_ValidationScriptsPartial" />
 }
 
 
-
-    <form method="post" asp-page-handler="AddProduct">
-
-        <!--Title-->
-        <input type="text" name="title"/>
-        <!--Price-->
-        <input type="text" name="price"/>
-        <!--Currency-->
-        <select name="land">
+<form method="post" asp-page-handler="AddProduct">
+    <div>
+        <input asp-for="Title" placeholder="title" />
+        <span asp-validation-for="Title"></span>
+    </div>
+    <div>
+        <input asp-for="Price" placeholder="price" />
+        <span asp-validation-for="Price"></span>
+    </div>
+    <div>
+        <select asp-for="Currency">
+            @foreach (var currency in Model.Currencies)
+            {
+                <option value="@currency.ID">@currency.Value</option>
+            }
+        </select>
+    </div>
+    <div>
+        <input asp-for="Description" placeholder="description" />
+        <span asp-validation-for="Description"></span>
+    </div>
+    <div>
+        <select asp-for="Land">
             @foreach (var land in Model.Lands)
             {
                 <option value="@land.ID">@land.Value</option>
             }
         </select>
-        <!--Land-->
-        <select name="currency">
-            @foreach(var currency in Model.Currencies)
-            {
-                <option value="@currency.ID">@currency.Value</option>
-            }
-        </select>
-
-        <input type="submit" value="Add product"/>
-    </form>
-
+    </div>
+    <div>
+        <input type="submit" value="add product" />
+    </div>
+</form>
 

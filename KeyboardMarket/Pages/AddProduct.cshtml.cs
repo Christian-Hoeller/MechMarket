@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
@@ -16,18 +18,45 @@ namespace KeyboardMarket.Pages
         public List<Currency> Currencies { get; set; }
         public List<Land> Lands { get; set; }
 
+
+        #region Bindproperties
+
+        [BindProperty]
+        [Required, StringLength(255, ErrorMessage = "Length can't be longer than 255")]
+        public string Title { get; set; }
+
+        //[Range(1, 9999, ErrorMessage = "Value must be between 1 and 9999")]
+        //[Required]
+        //[Column(TypeName = "decimal(16, 6)")]
+        //public decimal Price { get; set; }
+
+        [BindProperty]
+        [DataType(DataType.Currency)]
+        public decimal Price { get; set; }
+
+        [BindProperty]
+        public string Currency { get; set; }
+
+        [BindProperty]
+        public string Description { get; set; }
+
+        [BindProperty]
+        public string Land { get; set; }
+
+        #endregion
+
+
+
         public void OnGet()
         {
             Currencies = GetCurrencies();
             Lands = GetLands();
-        }
+        } 
 
         public async Task OnPostAddProduct()
         {
-            var title = Request.Form["title"];
-            var land = Request.Form["land"];
-            var price = Request.Form["price"];
-            var currency = Request.Form["currency"];
+            string sqlCommand = "INSERT INTO [dbo].[Products](Email, Title, Price, Currency, Condition, Description, Land)" +
+                $"VALUES()";
         }
 
 
