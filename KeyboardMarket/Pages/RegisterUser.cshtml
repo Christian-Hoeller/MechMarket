@@ -4,3 +4,24 @@
 }
 
 <h1>Register User</h1>
+
+<form method="post" asp-page-handler="Register">
+    <div>
+        <input asp-for="Username" placeholder="enter username" />
+        <span asp-validation-for="Username"></span>
+    </div>
+
+    @foreach (var gender in Model.Genders)
+    {
+        <input type="radio" asp-for="Gender" value="@gender" />@gender<br />
+    }
+    <div>
+        <input asp-for="Terms" /> Accept terms of service
+        <span asp-validation-for="Terms"></span>
+
+    </div>
+    <input type="submit" value="Register"/>
+
+
+    <!--ACCEPT TERMS OF SERVICE-->
+</form>
