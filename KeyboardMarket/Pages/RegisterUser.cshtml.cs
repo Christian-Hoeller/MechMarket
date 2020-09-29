@@ -17,10 +17,9 @@ namespace KeyboardMarket.Pages
 
         #region Properties
 
-        #endregion
 
-        [BindProperty]
-        public string Gender { get; set; }
+        [BindProperty, Required]
+        public string Gender { get; set; } = "Male";
         public string[] Genders = new[] { "Male", "Female", "Other" };
 
         [BindProperty]
@@ -28,43 +27,67 @@ namespace KeyboardMarket.Pages
         public string Username { get; set; }
 
         [BindProperty]
-        [Required]
-        public bool Terms { get; set; }
+        [Range(typeof(bool), "true", "true", ErrorMessage = "You must accept the terms  ")]
+        public bool TermsChecked { get; set; }
+
+        #endregion
 
         public void OnGet()
         {
         }
 
 
-        public async Task OnPostRegister()
+        public IActionResult OnPostRegister()
         {
-            WriteUserInDatabase();
+            if (TermsChecked)
+            {
+                if (!UsernameInDatabase())
+                {
+                    string email = User.FindFirstValue(ClaimTypes.Email);
+                    string commandText = "INSERT INTO Users(Email, Username, Joined, Gender, UserGroup)" +
+                        $"VALUES(@email, @username, @joined, @gender, 0)";
+
+                    SqlCommand command = new SqlCommand(commandText);
+                    command.Parameters.Add("@email", SqlDbType.VarChar);
+                    command.Parameters["@email"].Value = email;
+                    command.Parameters.Add("@username", SqlDbType.VarChar);
+                    command.Parameters["@username"].Value = Username;
+                    command.Parameters.Add("@joined", SqlDbType.VarChar);
+                    command.Parameters["@joined"].Value = DateTime.Now;
+                    command.Parameters.Add("@gender", SqlDbType.VarChar);
+                    command.Parameters["@gender"].Value = Gender[0].ToString();
+
+                    DBContext dBContext = new DBContext();
+                    DataTable dt = new DataTable();
+
+                    using (command)
+                    {
+                        try
+                        {
+                            dt = dBContext.GetDataReader(command);
+                            return new RedirectToPageResult("/index");
+                        }
+                        catch (Exception ex)
+                        {
+                        }
+                    }
+                }
+
+            }
+            return Page();
         }
 
-        public void WriteUserInDatabase()
+        private bool UsernameInDatabase()
         {
-            string email = User.FindFirstValue(ClaimTypes.Email);
-            DateTime joinedDate = DateTime.Now;
-            //Username
-            //Gender
-
-            string command = "INSERT INTO Users(Email, Username, Joined, Gender, UserGroup)" +
-                $"VALUES('{email}', '{Username}', '{DateTime.Now}', '{Gender[0]}', 0)";
-
             DBContext dBContext = new DBContext();
             DataTable dt = new DataTable();
 
-            using (SqlCommand cmd = new SqlCommand(command))
+            using (SqlCommand cmd = new SqlCommand($"SELECT * FROM Users WHERE Username = '{Username}'"))
             {
-                try
-                {
-                    dt = dBContext.GetDataReader(cmd);
-                }
-                catch(Exception ex)
-                {
-
-                }
+                dt = dBContext.GetDataReader(cmd);
             }
+
+            return dt.Rows.Count != 0;
         }
     }
 }
