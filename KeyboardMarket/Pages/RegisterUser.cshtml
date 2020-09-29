@@ -9,6 +9,7 @@
     <div>
         <input asp-for="Username" placeholder="enter username" />
         <span asp-validation-for="Username"></span>
+        <p>@Model.UserExistsError</p>
     </div>
 
     @foreach (var gender in Model.Genders)

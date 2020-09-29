@@ -30,6 +30,9 @@ namespace KeyboardMarket.Pages
         [Range(typeof(bool), "true", "true", ErrorMessage = "You must accept the terms  ")]
         public bool TermsChecked { get; set; }
 
+        [BindProperty]
+        public string UserExistsError { get; set; }
+
         #endregion
 
         public void OnGet()
@@ -41,7 +44,11 @@ namespace KeyboardMarket.Pages
         {
             if (TermsChecked)
             {
-                if (!UsernameInDatabase())
+                if (UsernameInDatabase())
+                {
+                    UserExistsError = "User already exists";
+                }
+                else
                 {
                     string email = User.FindFirstValue(ClaimTypes.Email);
                     string commandText = "INSERT INTO Users(Email, Username, Joined, Gender, UserGroup)" +
