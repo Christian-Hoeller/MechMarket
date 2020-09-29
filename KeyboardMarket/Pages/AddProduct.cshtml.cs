@@ -30,8 +30,10 @@ namespace KeyboardMarket.Pages
         //[Column(TypeName = "decimal(16, 6)")]
         //public decimal Price { get; set; }
 
-        [BindProperty]
+        [Range(1, 100)]
         [DataType(DataType.Currency)]
+        [Column(TypeName = "decimal(18, 2)")]
+        [BindProperty]
         public decimal Price { get; set; }
 
         [BindProperty]
