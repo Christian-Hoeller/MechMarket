@@ -1,0 +1,13 @@
+﻿@page "/products"
+@model KeyboardMarket.Pages.AllProductsModel
+@{
+}
+
+@foreach(var item in Model.Products)
+{
+    <h1>@item.Title</h1>
+    <p>@item.Price @item.Currency</p>
+    <p>@item.Land</p>
+    <p>@item.Description</p>
+    <hr />
+}
