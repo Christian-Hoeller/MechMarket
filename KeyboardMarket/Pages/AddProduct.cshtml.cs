@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using KeyboardMarket.Classes;
 using KeyboardMarket.Classes.Models;
@@ -17,6 +18,7 @@ namespace KeyboardMarket.Pages
     {
         public List<Currency> Currencies { get; set; }
         public List<Land> Lands { get; set; }
+        public List<Condition> Conditions { get; set; }
 
 
         #region Bindproperties
@@ -25,14 +27,10 @@ namespace KeyboardMarket.Pages
         [Required, StringLength(255, ErrorMessage = "Length can't be longer than 255")]
         public string Title { get; set; }
 
-        //[Range(1, 9999, ErrorMessage = "Value must be between 1 and 9999")]
-        //[Required]
-        //[Column(TypeName = "decimal(16, 6)")]
-        //public decimal Price { get; set; }
-
         [Range(1, 100)]
         [DataType(DataType.Currency)]
         [Column(TypeName = "decimal(18, 2)")]
+
         [BindProperty]
         public decimal Price { get; set; }
 
@@ -45,6 +43,9 @@ namespace KeyboardMarket.Pages
         [BindProperty]
         public string Land { get; set; }
 
+        [BindProperty]
+        public string Condition { get; set; }
+
         #endregion
 
 
@@ -53,14 +54,50 @@ namespace KeyboardMarket.Pages
         {
             Currencies = GetCurrencies();
             Lands = GetLands();
+            Conditions = GetConditions();
         } 
 
-        public async Task OnPostAddProduct()
+        public IActionResult OnPostAddProduct()
         {
-            string sqlCommand = "INSERT INTO [dbo].[Products](Email, Title, Price, Currency, Condition, Description, Land)" +
-                $"VALUES()";
+            if (ModelState.IsValid)
+            {
+                string email = User.FindFirstValue(ClaimTypes.Email);
+
+                string sqlCommand = "INSERT INTO [dbo].[Products](Email, Title, Price, Currency, Condition, Description, Land)" +
+               $"VALUES('{email}', '{Title}',{Price}, {Currency}, {Condition}, '{Description}', {Land})";
+
+                DBContext dBContext = new DBContext();
+
+                using (SqlCommand cmd = new SqlCommand(sqlCommand))
+                {
+                    dBContext.ExecuteNonQuery(cmd);
+                    return new RedirectToPageResult("/index");
+                }
+            }
+            return Page();
         }
 
+        private List<Condition> GetConditions()
+        {
+            DBContext dBContext = new DBContext();
+            DataTable dt = new DataTable();
+
+            using (SqlCommand cmd = new SqlCommand("SELECT * FROM Conditions"))
+            {
+                dt = dBContext.GetDataReader(cmd);
+            }
+
+            List<Condition> Conditions = new List<Condition>();
+
+            foreach (DataRow row in dt.Rows)
+            {
+                int id = Convert.ToInt32(row["ConditionID"]);
+                string currency = row["Condition"].ToString();
+                Conditions.Add(new Condition(id, currency));
+
+            }
+            return Conditions;
+        }
 
         private List<Currency> GetCurrencies()
         {

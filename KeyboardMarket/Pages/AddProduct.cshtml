@@ -35,6 +35,14 @@
         </select>
     </div>
     <div>
+        <select asp-for="Condition">
+            @foreach (var condition in Model.Conditions)
+            {
+                <option value="@condition.ID">@condition.Value</option>
+            }
+        </select>
+    </div>
+    <div>
         <input type="submit" value="add product" />
     </div>
 </form>
